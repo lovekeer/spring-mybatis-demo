@@ -22,12 +22,11 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 /**
- * MabtisConfig
- * 
- * @author xile.lu
- * @version [版本号, 2018年7月31日]
- * @see [相关类/方法]
- * @since [产品/模块版本]
+ *  MybatisConfig
+ *
+ * @author jiang.liu
+ * @create 2019/5/21 10:53
+ * @since 1.0.0
  */
 @Configuration
 @MapperScan(basePackages = "com.bfd.mapper", sqlSessionTemplateRef = "druidSqlSessionTemplate")
@@ -79,36 +78,29 @@ public class MybatisConfig {
     @Value("${spring.datasource.druid.testOnReturn}")
     private boolean testOnReturn;
     
-//    @Value("${spring.datasource.druid.filters}")
-//    private String filters;
+    @Value("${spring.datasource.druid.filters}")
+    private String filters;
     
-    @Bean(name = "druidDataSource", destroyMethod = "close", initMethod = "init")
+    @Bean(name = "druidDataSource")
     @ConfigurationProperties(prefix = "spring.datasource.druid")
     @Primary
-    public DataSource druidDataSource(DataSourceProperties properties) throws SQLException {
+    public DataSource druidDataSource() throws SQLException {
         DruidDataSource dataSource = new DruidDataSource();
         dataSource.setDriverClassName(driverClass);
         dataSource.setUrl(url);
         dataSource.setUsername(user);
         dataSource.setPassword(password);
-        
-        //
         dataSource.setInitialSize(initialSize);
         dataSource.setMinIdle(minIdle);
         dataSource.setMaxActive(maxActive);
         dataSource.setMaxWait(maxWait);
-        
         dataSource.setTimeBetweenEvictionRunsMillis(timeBetweenEvictionRunsMillis);
         dataSource.setMinEvictableIdleTimeMillis(minEvictableIdleTimeMillis);
         dataSource.setValidationQuery(validationQuery);
-        
         dataSource.setTestWhileIdle(testWhileIdle);
         dataSource.setTestOnBorrow(testOnBorrow);
         dataSource.setTestOnReturn(testOnReturn);
-        
-//        dataSource.setFilters(filters);
-        
-        // return DataSourceBuilder.create().type(dataSource.getClass()).build();
+        dataSource.setFilters(filters);
         return dataSource;
     }
     
